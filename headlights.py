@@ -4,8 +4,10 @@ import web.serv
 import schedule
 import time
 import main
+import handlers
 import os
 import threading
+import eink
 
 global headlightsjob
 global configfile
@@ -22,6 +24,7 @@ def start():
 def runapp():
     global headlightsjob
     global configfile
+    eink.main(configfile)
     headlightsjob = schedule.every().day.at(configfile['Schedule']['runat']).do(start)
     web.serv.updateScheduledRun(headlightsjob.next_run.strftime("%d/%m/%y %H:%M:%S"))
     print("Headlights service running, next scheduled launch is at " + headlightsjob.next_run.strftime("%d/%m/%y %H:%M:%S"))

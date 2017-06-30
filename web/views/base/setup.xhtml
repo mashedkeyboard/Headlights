@@ -1,0 +1,46 @@
+﻿<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="${response.charset}" />
+
+    <title py:block="master_title">Headlights</title>
+    <script type="text/javascript" src="${tg.url('/js/jquery-3.1.0.min.js')}"></script>
+    <script type="text/javascript" src="${tg.url('/js/bootstrap-clockpicker.min.js')}"></script>
+    <script type="text/javascript" src="${tg.url('/js/jquery.multi-select.js')}"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-T8Gy5hrqNKT+hzMclPo118YTQO6cYprQmhrYwIiQ/3axmI1hQomh7Ud2hPOy8SP1" crossorigin="anonymous" />
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/template.min.css')}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/custom.css')}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/multi-select.css')}" />
+    <link rel="stylesheet" type="text/css" media="screen" href="${tg.url('/css/bootstrap-clockpicker.min.css')}" />
+
+    <py:block name="head"></py:block>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-default">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-content">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="${tg.url('/')}">
+                <i class="fa fa-print"></i>
+                Headlights
+            </a>
+        </div>
+    </nav>
+
+
+    <div class="container">
+        <!-- Main included content -->
+        <py:block name="body"></py:block>
+    </div>
+
+    <script type="text/javascript" src="${tg.url('/js/bootstrap.min.js')}"></script>
+</body>
+</html>

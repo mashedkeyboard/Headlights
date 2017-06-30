@@ -1,0 +1,47 @@
+﻿<!DOCTYPE html>
+
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" py:extends="web/views/base/master.xhtml" py:strip="True">
+
+<head py:block="head" py:strip="True">
+    <title py:block="master_title">Headlights | home</title>
+</head>
+
+<body py:block="body" py:strip="True">
+    <h1 class="text-muted">Headlights//home</h1>
+    <h4>Next scheduled run: ${nextRun}</h4>
+    <br />
+    <div class="alert alert-dismissible alert-success" py:if="update == 'true'">
+        <button class="close" type="button" data-dismiss="alert">&times;</button>
+        <strong>Woot!</strong> Headlights configuration updated successfully.
+    </div>
+    <div class="alert alert-dismissible alert-success" py:if="reload == 'true'">
+        <button class="close" type="button" data-dismiss="alert">&times;</button>
+        <strong>Woot!</strong> Headlights reloaded successfully.
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                <div class="box">
+                    <div class="box-icon">
+                        <span class="fa fa-4x fa-check"></span>
+                    </div>
+                    <div class="info">
+                        <h4 class="text-center">Headlights is <strong>active</strong></h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                <div class="box">
+                    <div class="box-icon box-icon-warn">
+                        <a class="fa fa-4x fa-refresh" href="/reload"></a>
+                    </div>
+                    <div class="info">
+                        <h4 class="text-center"><strong>Reload</strong> Headlights</h4>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

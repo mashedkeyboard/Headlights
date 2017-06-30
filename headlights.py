@@ -10,12 +10,14 @@ import threading
 global headlightsjob
 global configfile
 
+
 def start():
     global headlightsjob
     print("Headlights started at " + time.strftime("%d/%m/%y %H:%M:%S"))
     main.start()
     web.serv.updateScheduledRun(headlightsjob.next_run.strftime("%d/%m/%y %H:%M:%S"))
     print("Headlights completed, next scheduled launch is at " + headlightsjob.next_run.strftime("%d/%m/%y %H:%M:%S"))
+
 
 def runapp():
     global headlightsjob
@@ -26,6 +28,7 @@ def runapp():
     while True:
         schedule.run_pending()
         time.sleep(1)
+
 
 def reload():
     global headlightsjob

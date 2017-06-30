@@ -10,6 +10,7 @@ import usb
 import sys
 from escpos import *
 
+
 # Get around a weird Python thing
 def start():
     try:
@@ -17,6 +18,7 @@ def start():
     except (KeyboardInterrupt, SystemExit, EOFError) as e:
         handlers.closed()
         raise
+
 
 # Get configuration details from the config file
 def getCfg():
@@ -31,6 +33,7 @@ def getCfg():
     maincfg = configfile['General']
     pluginlist = configfile['Plugins']['toload'].split(',')
     debugcfg = configfile['Debug']
+
 
 # Main functionality! Woot!
 def main():

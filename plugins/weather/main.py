@@ -5,7 +5,7 @@
 
 import os
 import handlers
-import configparser
+from configparser import ConfigParser
 import pluginloader
 from plugins.weather import datapoint
 
@@ -15,7 +15,7 @@ def init():
     global weathercfg
 
     # Load configuration and all that jazz
-    config = configparser.ConfigParser()
+    config = ConfigParser()
     if os.path.isfile('config/weather.cfg'):
         config.read('config/weather.cfg')
         weathercfg = config['Info']
@@ -47,7 +47,7 @@ def init():
            '30' : 'thunder.png'
     }
 
-def print(p):
+def run(p):
     # Now let's fetch the more localized and up-to-date but raw data - with an accurate 'real' OS path?
     p.image(os.path.join(os.path.realpath('resources/images/weather') + os.path.sep + wtypes[datapoint.fetchFrcWthrType(weathercfg['ForecastLocation'],weathercfg['DataPointKey'])]),impl="bitImageColumn")
     handlers.debug("Weather printed the localized weather data image")

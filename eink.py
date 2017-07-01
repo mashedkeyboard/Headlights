@@ -1,14 +1,10 @@
 #!/usr/bin/env python
 
-import os
-import sys
-
-from PIL import Image
-from PIL import ImageDraw
-from PIL import ImageFont
-from datetime import datetime
-import time
 from papirus import Papirus
+from PIL import ImageFont, ImageDraw, Image
+import sys
+import os
+import time
 
 # Check EPD_SIZE is defined
 EPD_SIZE=0.0
@@ -27,20 +23,6 @@ if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | o
 
 WHITE = 1
 BLACK = 0
-
-CLOCK_FONT_FILE = '/usr/share/fonts/truetype/freefont/FreeMonoBold.ttf'
-DATE_FONT_FILE  = '/usr/share/fonts/truetype/freefont/FreeMono.ttf'
-
-
-def main(config):
-
-    """main program - draw and display time and date"""
-
-    papirus = Papirus()
-
-    papirus.clear()
-
-    demo(papirus, config)
 
 
 def getFontSize(my_papirus, printstring):
@@ -65,39 +47,24 @@ def getFontSize(my_papirus, printstring):
     return fontsize-1, font.getsize(printstring)
 
 
-def demo(papirus, config):
-    """simple partial update demo - draw a clock"""
+def drawWords(papirus, printstring, fontsize, dims):
 
-    # initially set all white background
+    #initially set all white background
     image = Image.new('1', papirus.size, WHITE)
 
     # prepare for drawing
     draw = ImageDraw.Draw(image)
-    width, height = image.size
+    font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMono.ttf', fontsize)
 
-    font_size, dims = getFontSize(papirus, 'Hi, ' + config['General']['HelloMyNameIs'])
-    font = ImageFont.truetype(CLOCK_FONT_FILE, font_size)
+    draw.text(((papirus.width - dims[0]) / 2, (papirus.height / 2) - (dims[1] / 2)), printstring, font=font, fill=BLACK)
 
-    # clear the display buffer
-    draw.rectangle((0, 0, width, height), fill=WHITE, outline=WHITE)
-    previous_second = 0
-    previous_day = 0
-
-    draw.rectangle((2, 2, width - 2, height - 2), fill=WHITE, outline=BLACK)
-
-    draw.text(((papirus.width-dims[0])/2, (papirus.height/2) - (dims[1]/2)),
-              'Hi, ' + config['General']['HelloMyNameIs'], fill=BLACK, font=font)
-
-    # display image on the panel
     papirus.display(image)
+    papirus.update()
 
-# main
-# if "__main__" == __name__:
-#     if len(sys.argv) < 1:
-#         sys.exit('usage: {p:s}'.format(p=sys.argv[0]))
-#
-#     try:
-#         main(sys.argv[1:])
-#     except KeyboardInterrupt:
-#         sys.exit('interrupted')
-#         pass
+
+def full_write(string):
+    rot = '0'
+    papirus = Papirus(rotation=int(rot))
+    fontsize, dims = getFontSize(papirus, string)
+    drawWords(papirus, string, fontsize, dims)
+

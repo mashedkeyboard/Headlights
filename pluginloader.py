@@ -7,7 +7,7 @@ loadedPlugins = {}
 # Initialize a plugin and import it
 def init(name):
 	try:
-		loadedPlugins[name] = __import__('plugins.' + name + '.main',fromlist='main') # fromlist stops it from importing as the root module? python is weird
+		loadedPlugins[name] = __import__('plugins.' + name + '.main',fromlist=['main']) # fromlist stops it from importing as the root module? python is weird
 		loadedPlugins[name].init()
 	except Exception as e:
 		handlers.err("loading plugin " + name + " :: Exception raised :: " + str(e))
@@ -20,7 +20,7 @@ def unload(name):
 def printPlugin(name,printer):
     try:
         printer.text("\n")
-        loadedPlugins[name].print(printer)
+        loadedPlugins[name].run(printer)
         printer.text("\n")
     except Exception as e:
         handlers.err("running print for plugin " + name + " :: Exception raised :: " + str(e))

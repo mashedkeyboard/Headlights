@@ -1,5 +1,5 @@
 # Scheduling and web server and all sorts of fancy things!
-import configparser
+from configparser import ConfigParser
 import web.serv
 import schedule
 import time
@@ -24,7 +24,7 @@ def start():
 def runapp():
     global headlightsjob
     global configfile
-    eink.main(configfile)
+    eink.full_write('Hello, ' + configfile['General']['HelloMyNameIs'])
     headlightsjob = schedule.every().day.at(configfile['Schedule']['runat']).do(start)
     web.serv.updateScheduledRun(headlightsjob.next_run.strftime("%d/%m/%y %H:%M:%S"))
     print("Headlights service running, next scheduled launch is at " + headlightsjob.next_run.strftime("%d/%m/%y %H:%M:%S"))
@@ -38,7 +38,7 @@ def reload():
     global configfile
     schedule.clear()
     if os.path.isfile('config/headlights.cfg') == True:
-        configfile = configparser.ConfigParser()
+        configfile = ConfigParser()
         try:
             configfile.read('config/headlights.cfg')
         except PermissionError:
@@ -53,7 +53,7 @@ def reload():
 if __name__ == "__main__":
     # Load the configuration file
     if os.path.isfile('config/headlights.cfg') == True:
-        configfile = configparser.ConfigParser()
+        configfile = ConfigParser()
         try:
             configfile.read('config/headlights.cfg')
         except Exception as e:

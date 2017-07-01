@@ -7,7 +7,7 @@ def init():
     global newsFeed
     newsFeed = feedparser.parse("http://feeds.bbci.co.uk/news/rss.xml")
 
-def print(p):
+def run(p):
     global newsFeed
     p.set("RIGHT", "B", "B", 2, 2)
     p.text("News")

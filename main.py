@@ -1,5 +1,5 @@
 # Let's get some libraries
-import configparser
+from configparser import ConfigParser
 import datetime
 import logging
 import handlers
@@ -8,7 +8,8 @@ from time import strftime
 import os
 import usb
 import sys
-from escpos import *
+from escpos import printer
+import escpos.exceptions
 
 
 # Get around a weird Python thing
@@ -53,7 +54,7 @@ def main():
     consoleHandler.setFormatter(logFormatter)
     consoleHandler.setLevel(logging.WARNING) # Only output warnings to stdout
     rootLogger.addHandler(consoleHandler)
-    
+
     # Finally, output the log to a file
     try:
         fileHandler = logging.FileHandler("headlights.log")
@@ -67,7 +68,7 @@ def main():
     logging.info('Headlights process started')
 
     # Create a new configuration file instance
-    configfile = configparser.ConfigParser()
+    configfile = ConfigParser()
 
     # Does the user even have a configuration file?
     if os.path.isfile('config/headlights.cfg') != True:
@@ -100,7 +101,7 @@ def main():
     else:
         try:
             p = printer.Usb(int(maincfg['Vendor'],16),int(maincfg['Product'],16))
-        except (usb.core.NoBackendError,escpos.exceptions.USBNotFoundError) as e:
+        except (usb.core.NoBackendError, escpos.exceptions.USBNotFoundError) as e:
             logging.debug(e)
             handlers.criterr("Could not initialize printer. Check a printer matching the vendor and product in the config file is actually connected, and relaunch Headlights.")
         logging.debug("Initialized USB printer")

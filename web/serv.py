@@ -1,5 +1,7 @@
 from tg import expose, TGController, AppConfig, redirect
-import configparser
+from configparser import ConfigParser
+import unicodedata
+import handlers
 import webhelpers2
 import webhelpers2.text
 from web.mtwsgi import make_server
@@ -11,12 +13,14 @@ global nextRunTime
 global userconfig
 global firstrun
 
+
 def getSubdirectories(dir):
     return [name for name in os.listdir(dir)
             if os.path.isdir(os.path.join(dir, name)) and name != "__pycache__"]
 
+
 class SetupController(TGController):
-    mainconfig = configparser.ConfigParser()
+    mainconfig = ConfigParser()
 
     @expose('web/views/setup/index.xhtml')
     def index(self):
@@ -86,11 +90,12 @@ class SetupController(TGController):
         headlights.reload()
         redirect('/', {'update': 'true'})
 
+
 class PluginController(TGController):
-    mainconfig = configparser.ConfigParser()
+    mainconfig = ConfigParser()
 
     @expose('web/views/plugins.xhtml')
-    def index(self,enable = '',disable = '',delete = ''):
+    def index(self,enable = '', disable = '', delete = ''):
         def pclass(plugin,enabledlist):
             if plugin in enabledlist:
                 return {'class': 'success'}
@@ -98,20 +103,20 @@ class PluginController(TGController):
                 return {'class': 'none'}
 
         def pHasSettings(plugin):
-            pinfo = __import__('plugins.' + plugin,fromlist=plugin)
+            pinfo = __import__('plugins.' + plugin,fromlist=[plugin])
             if pinfo.hasconfig == True:
                 return {}
             else:
                 return {'class': 'disabled', 'disabled': 'true'} # returns disabled to disable the settings icon on the plugins page
 
         def getplugininfo(plugin):
-            pinfo = __import__('plugins.' + plugin,fromlist=plugin)
+            pinfo = __import__('plugins.' + plugin,fromlist=[plugin])
             return {'name': pinfo.name,
                     'descrip': pinfo.description,
                     'version': pinfo.version,
                     'author': pinfo.author}
 
-        mainconfig = configparser.ConfigParser()
+        mainconfig = ConfigParser()
         try:
             mainconfig.read('config/headlights.cfg')
         except PermissionError:
@@ -128,9 +133,9 @@ class PluginController(TGController):
 
     @expose('web/views/pluginsettings.xhtml')
     def settings(self,pname,updated = None):
-        pinfo = __import__('plugins.' + pname,fromlist=pname)
+        pinfo = __import__('plugins.' + pname,fromlist=[pname])
         if pinfo.hasconfig == True:
-            plugincfg = configparser.ConfigParser()
+            plugincfg = ConfigParser()
             try:
                 plugincfg.read(pinfo.configfile)
             except PermissionError:
@@ -149,7 +154,7 @@ class PluginController(TGController):
 
     @expose()
     def enablePlugin(self, pid):
-        mainconfig = configparser.ConfigParser()
+        mainconfig = ConfigParser()
         try:
             mainconfig.read('config/headlights.cfg')
         except PermissionError:
@@ -173,7 +178,7 @@ class PluginController(TGController):
 
     @expose()
     def disablePlugin(self, pid):
-        mainconfig = configparser.ConfigParser()
+        mainconfig = ConfigParser()
         try:
             mainconfig.read('config/headlights.cfg')
         except PermissionError:
@@ -188,9 +193,10 @@ class PluginController(TGController):
 
     @expose()
     def changeSettings(self, pname, psect, **kw):
-        pinfo = __import__('plugins.' + pname,fromlist=pname)
+        pname = unicodedata.normalize('NFKD', pname).encode('ascii', 'ignore')
+        pinfo = __import__('plugins.' + pname, fromlist=[pname])
         if pinfo.hasconfig == True:
-            plugincfg = configparser.ConfigParser()
+            plugincfg = ConfigParser()
             try:
                 plugincfg.read(pinfo.configfile)
             except PermissionError:
@@ -215,7 +221,7 @@ class RootController(TGController):
 
     @expose('web/views/settings.xhtml')
     def settings(self):
-        mainconfig = configparser.ConfigParser()
+        mainconfig = ConfigParser()
         try:
             mainconfig.read('config/headlights.cfg')
         except PermissionError:
@@ -227,7 +233,7 @@ class RootController(TGController):
 
     @expose()
     def changeTime(self, scheduleRun):
-        mainconfig = configparser.ConfigParser()
+        mainconfig = ConfigParser()
         try:
             mainconfig.read('config/headlights.cfg')
         except PermissionError:
@@ -240,7 +246,7 @@ class RootController(TGController):
 
     @expose()
     def changeGeneral(self, name, pvend, pprod):
-        mainconfig = configparser.ConfigParser()
+        mainconfig = ConfigParser()
         try:
             mainconfig.read('config/headlights.cfg')
         except PermissionError:
@@ -267,7 +273,7 @@ def init(isfirst = False):
     global firstrun
     firstrun = isfirst
     if os.path.isfile('config/web.cfg') == True:
-        userconfig = configparser.ConfigParser()
+        userconfig = ConfigParser()
         try:
             userconfig.read('config/web.cfg')
         except PermissionError:
@@ -280,6 +286,10 @@ def init(isfirst = False):
 
 def run():
     global userconfig
+    try:
+        port = userconfig['Web']['porttoserve']
+    except AttributeError:
+        port = '9375'
     global httpd
     config = AppConfig(minimal=True, root_controller=RootController())
     config['helpers'] = webhelpers2
@@ -288,8 +298,8 @@ def run():
     config.paths['static_files'] = 'web/public'
     application = config.make_wsgi_app()
 
-    print("Serving on port " + userconfig['Web']['porttoserve'] + "...")
-    httpd = make_server('', int(userconfig['Web']['porttoserve']), application, 3)
+    print("Serving on port " + port + "...")
+    httpd = make_server('', int(port), application, 3)
     httpd.serve_forever()
 
 def updateScheduledRun(newtime):

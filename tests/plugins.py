@@ -1,5 +1,5 @@
 import pluginloader
-from escpos import *
+from escpos import printer
 
 def testLoadPlugin():
     pluginloader.init('test')

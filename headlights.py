@@ -8,6 +8,8 @@ import handlers
 import os
 import threading
 import eink
+import pluginloader
+from papirus import PapirusComposite
 
 global headlightsjob
 global configfile
@@ -15,16 +17,36 @@ global configfile
 
 def start():
     global headlightsjob
+    global configfile
+    if os.path.isfile('config/headlights.cfg'):
+        configfile = ConfigParser()
+        try:
+            configfile.read('config/headlights.cfg')
+        except Exception as e:
+            handlers.criterr("Permissions error on headlights.cfg. Please ensure you have write permissions for the directory.")
+    else:
+        print("Please configure Headlights!")
+        exit()
     print("Headlights started at " + time.strftime("%d/%m/%y %H:%M:%S"))
     main.start()
-    web.serv.updateScheduledRun(headlightsjob.next_run.strftime("%d/%m/%y %H:%M:%S"))
-    print("Headlights completed, next scheduled launch is at " + headlightsjob.next_run.strftime("%d/%m/%y %H:%M:%S"))
+    refresh_eink(configfile)
+    print("Headlights completed!")
+
+
+def refresh_eink(configfile):
+    screen = PapirusComposite(False)
+    eink.push(screen, configfile['General']['HelloMyNameIs'])
+    pluginlist = configfile['Plugins']['toload'].split(',')
+    for plugin in pluginlist:
+        pluginloader.init(plugin)
+    pluginloader.updateAllPlugins()
+    eink.push_plugins(screen)
 
 
 def runapp():
     global headlightsjob
     global configfile
-    eink.full_write('Hello, ' + configfile['General']['HelloMyNameIs'])
+    refresh_eink(configfile)
     headlightsjob = schedule.every().day.at(configfile['Schedule']['runat']).do(start)
     web.serv.updateScheduledRun(headlightsjob.next_run.strftime("%d/%m/%y %H:%M:%S"))
     print("Headlights service running, next scheduled launch is at " + headlightsjob.next_run.strftime("%d/%m/%y %H:%M:%S"))
@@ -36,23 +58,26 @@ def runapp():
 def reload():
     global headlightsjob
     global configfile
-    schedule.clear()
-    if os.path.isfile('config/headlights.cfg') == True:
+    if os.path.isfile('config/headlights.cfg'):
         configfile = ConfigParser()
         try:
             configfile.read('config/headlights.cfg')
-        except PermissionError:
+        except Exception as e:
             handlers.criterr("Permissions error on headlights.cfg. Please ensure you have write permissions for the directory.")
     else:
-        print("No configuration file found. Please configure Headlights.")
+        print("Please configure Headlights!")
         exit()
+    schedule.clear()
+    refresh_eink(configfile)
     headlightsjob = schedule.every().day.at(configfile['Schedule']['runat']).do(start)
     web.serv.updateScheduledRun(headlightsjob.next_run.strftime("%d/%m/%y %H:%M:%S"))
 
 
 if __name__ == "__main__":
+    global configfile
     # Load the configuration file
-    if os.path.isfile('config/headlights.cfg') == True:
+    # noinspection PyPackageRequirements
+    if os.path.isfile('config/headlights.cfg'):
         configfile = ConfigParser()
         try:
             configfile.read('config/headlights.cfg')
@@ -61,6 +86,10 @@ if __name__ == "__main__":
         web.serv.init()
         # Run the web server
         thr = threading.Thread(target=web.serv.run)
+        thr.start()
+
+        # Runs the API
+        thr = threading.Thread(target=web.serv.run_api)
         thr.start()
 
         # Runs the scheduler and all that jazz

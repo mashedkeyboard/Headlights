@@ -18,6 +18,10 @@
         <button class="close" type="button" data-dismiss="alert">&times;</button>
         <strong>Woot!</strong> Headlights reloaded successfully.
     </div>
+    <div class="alert alert-dismissible alert-success" py:if="run == 'true'">
+        <button class="close" type="button" data-dismiss="alert">&times;</button>
+        <strong>Woot!</strong> Headlights ran successfully.
+    </div>
     <div class="container">
         <div class="row">
             <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
@@ -38,6 +42,17 @@
                     </div>
                     <div class="info">
                         <h4 class="text-center"><strong>Reload</strong> Headlights</h4>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                <div class="box">
+                    <div class="box-icon box-icon-warn">
+                        <a class="fa fa-4x fa-print" href="/run"></a>
+                    </div>
+                    <div class="info">
+                        <h4 class="text-center"><strong>Run</strong> now</h4>
                     </div>
                 </div>
             </div>

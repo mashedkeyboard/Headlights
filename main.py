@@ -6,10 +6,7 @@ import handlers
 import pluginloader
 from time import strftime
 import os
-import usb
-import sys
-from escpos import printer
-import escpos.exceptions
+import printer
 
 
 # Get around a weird Python thing
@@ -93,19 +90,7 @@ def main():
     consoleHandler.setLevel(numeric_level)
     fileHandler.setLevel(numeric_level)
 
-    # Connects to the printer (unless test mode is enabled, in which case starts a dummy instance)
-    if debugcfg['TestMode'] == "1":
-        logging.warning('Headlights is in test mode. Nothing will actually be printed - you\'ll just see the output to the printer on the screen.')
-        p = printer.Dummy()
-        logging.debug("Initialized dummy printer")
-    else:
-        try:
-            p = printer.Usb(int(maincfg['Vendor'],16),int(maincfg['Product'],16))
-        except (usb.core.NoBackendError, escpos.exceptions.USBNotFoundError) as e:
-            logging.debug(e)
-            handlers.criterr("Could not initialize printer. Check a printer matching the vendor and product in the config file is actually connected, and relaunch Headlights.")
-        logging.debug("Initialized USB printer")
-
+    p = printer.setup_printer(maincfg, debugcfg, logging)
 
     # Setup the printer for the beautiful header, and then print it
     p.set(align="LEFT",text_type="B",width=2,height=2)

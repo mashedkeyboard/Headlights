@@ -1,4 +1,4 @@
-from tg import expose, TGController, AppConfig, redirect
+from tg import expose, TGController, AppConfig, redirect, request, abort
 from configparser import ConfigParser
 import unicodedata
 import handlers
@@ -8,6 +8,8 @@ from web.mtwsgi import make_server
 import os
 import shutil
 import headlights
+import printer
+import logging
 
 global nextRunTime
 global userconfig
@@ -95,22 +97,23 @@ class PluginController(TGController):
     mainconfig = ConfigParser()
 
     @expose('web/views/plugins.xhtml')
-    def index(self,enable = '', disable = '', delete = ''):
-        def pclass(plugin,enabledlist):
+    def index(self, enable='', disable='', delete=''):
+        def pclass(plugin, enabledlist):
             if plugin in enabledlist:
                 return {'class': 'success'}
             else:
                 return {'class': 'none'}
 
         def pHasSettings(plugin):
-            pinfo = __import__('plugins.' + plugin,fromlist=[plugin])
+            pinfo = __import__('plugins.' + plugin, fromlist=[plugin])
             if pinfo.hasconfig == True:
                 return {}
             else:
-                return {'class': 'disabled', 'disabled': 'true'} # returns disabled to disable the settings icon on the plugins page
+                return {'class': 'disabled',
+                        'disabled': 'true'}  # returns disabled to disable the settings icon on the plugins page
 
         def getplugininfo(plugin):
-            pinfo = __import__('plugins.' + plugin,fromlist=[plugin])
+            pinfo = __import__('plugins.' + plugin, fromlist=[plugin])
             return {'name': pinfo.name,
                     'descrip': pinfo.description,
                     'version': pinfo.version,
@@ -120,7 +123,8 @@ class PluginController(TGController):
         try:
             mainconfig.read('config/headlights.cfg')
         except PermissionError:
-            handlers.criterr("Permissions error on headlights.cfg. Please ensure you have write permissions for the directory.")
+            handlers.criterr(
+                "Permissions error on headlights.cfg. Please ensure you have write permissions for the directory.")
         pluginlist = mainconfig['Plugins']['toload'].split(',')
         return {'enabled': pluginlist,
                 'all': getSubdirectories('plugins'),
@@ -132,14 +136,15 @@ class PluginController(TGController):
                 'psclass': pHasSettings}
 
     @expose('web/views/pluginsettings.xhtml')
-    def settings(self,pname,updated = None):
-        pinfo = __import__('plugins.' + pname,fromlist=[pname])
+    def settings(self, pname, updated=None):
+        pinfo = __import__('plugins.' + pname, fromlist=[pname])
         if pinfo.hasconfig == True:
             plugincfg = ConfigParser()
             try:
                 plugincfg.read(pinfo.configfile)
             except PermissionError:
-                handlers.criterr("Permissions error on plugin configuration file. Please ensure you have write permissions for the directory.")
+                handlers.criterr(
+                    "Permissions error on plugin configuration file. Please ensure you have write permissions for the directory.")
             return {'id': pname,
                     'name': pinfo.name,
                     'hasConfig': True,
@@ -158,7 +163,8 @@ class PluginController(TGController):
         try:
             mainconfig.read('config/headlights.cfg')
         except PermissionError:
-            handlers.criterr("Permissions error on headlights.cfg. Please ensure you have write permissions for the directory.")
+            handlers.criterr(
+                "Permissions error on headlights.cfg. Please ensure you have write permissions for the directory.")
         pluginlist = mainconfig['Plugins']['toload'].split(',')
         if pluginlist[0] != '':
             pluginlist.append(pid)
@@ -182,7 +188,8 @@ class PluginController(TGController):
         try:
             mainconfig.read('config/headlights.cfg')
         except PermissionError:
-            handlers.criterr("Permissions error on headlights.cfg. Please ensure you have write permissions for the directory.")
+            handlers.criterr(
+                "Permissions error on headlights.cfg. Please ensure you have write permissions for the directory.")
         pluginlist = mainconfig['Plugins']['toload'].split(',')
         pluginlist.remove(pid)
         mainconfig['Plugins']['toload'] = ','.join(pluginlist)
@@ -200,7 +207,8 @@ class PluginController(TGController):
             try:
                 plugincfg.read(pinfo.configfile)
             except PermissionError:
-                handlers.criterr("Permissions error on plugin configuration file. Please ensure you have write permissions for the directory.")
+                handlers.criterr(
+                    "Permissions error on plugin configuration file. Please ensure you have write permissions for the directory.")
             for name, value in kw.items():
                 plugincfg[psect][name] = value
             with open(pinfo.configfile, 'w') as configfile:
@@ -209,15 +217,15 @@ class PluginController(TGController):
         else:
             redirect('/plugins/settings/' + pname, {'updated': 'false'})
 
-class RootController(TGController):
 
+class RootController(TGController):
     @expose('web/views/index.xhtml')
-    def index(self, update = '', reload = ''):
+    def index(self, update='', reload='', run=''):
         global firstrun
         if firstrun == True:
             redirect('/setup/')
         global nextRunTime
-        return {'nextRun': nextRunTime, 'update': update, 'reload': reload}
+        return {'nextRun': nextRunTime, 'update': update, 'reload': reload, 'run': run}
 
     @expose('web/views/settings.xhtml')
     def settings(self):
@@ -225,11 +233,17 @@ class RootController(TGController):
         try:
             mainconfig.read('config/headlights.cfg')
         except PermissionError:
-            handlers.criterr("Permissions error on headlights.cfg. Please ensure you have write permissions for the directory.")
+            handlers.criterr(
+                "Permissions error on headlights.cfg. Please ensure you have write permissions for the directory.")
         return {'runTime': mainconfig["Schedule"]["runat"],
                 'name': mainconfig["General"]["HelloMyNameIs"],
                 'pvend': mainconfig["General"]["Vendor"],
                 'pprod': mainconfig["General"]["Product"]}
+
+    @expose()
+    def run(self):
+        headlights.start()
+        redirect('/', {'run': 'true'})
 
     @expose()
     def changeTime(self, scheduleRun):
@@ -237,7 +251,8 @@ class RootController(TGController):
         try:
             mainconfig.read('config/headlights.cfg')
         except PermissionError:
-            handlers.criterr("Permissions error on headlights.cfg. Please ensure you have write permissions for the directory.")
+            handlers.criterr(
+                "Permissions error on headlights.cfg. Please ensure you have write permissions for the directory.")
         mainconfig["Schedule"]["runat"] = scheduleRun
         with open('config/headlights.cfg', 'w') as headlightscfg:
             mainconfig.write(headlightscfg)
@@ -250,7 +265,8 @@ class RootController(TGController):
         try:
             mainconfig.read('config/headlights.cfg')
         except PermissionError:
-            handlers.criterr("Permissions error on headlights.cfg. Please ensure you have write permissions for the directory.")
+            handlers.criterr(
+                "Permissions error on headlights.cfg. Please ensure you have write permissions for the directory.")
         mainconfig["General"]["HelloMyNameIs"] = name
         mainconfig["General"]["vendor"] = pvend
         mainconfig["General"]["product"] = pprod
@@ -267,7 +283,8 @@ class RootController(TGController):
     setup = SetupController()
     plugins = PluginController()
 
-def init(isfirst = False):
+
+def init(isfirst=False):
     global userconfig
     global nextRunTime
     global firstrun
@@ -277,12 +294,13 @@ def init(isfirst = False):
         try:
             userconfig.read('config/web.cfg')
         except PermissionError:
-            handlers.criterr("Permissions error on web.cfg. Please ensure you have write permissions for the directory.")
+            handlers.criterr(
+                "Permissions error on web.cfg. Please ensure you have write permissions for the directory.")
     else:
         print("No configuration file found. Please configure Headlights's server.")
         exit()
     nextRunTime = "loading..."
-    
+
 
 def run():
     global userconfig
@@ -302,9 +320,53 @@ def run():
     httpd = make_server('', int(port), application, 3)
     httpd.serve_forever()
 
+
+def run_api():
+    global userconfig
+    try:
+        port = userconfig['Web']['apiport']
+    except KeyError:
+        port = '9380'
+    global httpd
+    config = AppConfig(minimal=True, root_controller=APIRootController())
+    config['helpers'] = webhelpers2
+    config.renderers = ['kajiki']
+    config.serve_static = False
+    application = config.make_wsgi_app()
+
+    print("Serving APIs on port " + port + "...")
+    httpd = make_server('', int(port), application, 3)
+    httpd.serve_forever()
+
+
+class APIRootController(TGController):
+    @expose()
+    def tweet_print(self, authkey):
+        configfile = ConfigParser()
+        try:
+            configfile.read('config/headlights.cfg')
+        except PermissionError:
+            handlers.criterr(
+                "Permissions error on headlights.cfg. Please ensure you have write permissions for the directory.")
+        maincfg = configfile['General']
+        debugcfg = configfile['Debug']
+
+        try:
+            key = configfile['Web']['apiauth']
+        except KeyError:
+            key = ''
+        if key != authkey:
+            abort(401)
+        p = printer.setup_printer(maincfg, debugcfg, logging)
+        p.text(request.body)
+        p.cut()
+        abort(200)
+
+
 def updateScheduledRun(newtime):
     global nextRunTime
     nextRunTime = newtime
+
 
 def shutdown():
     global httpd

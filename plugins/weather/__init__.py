@@ -9,3 +9,6 @@ configfile = "config/weather.cfg"
 configopts = {'Info': {'TextRegionCode': 'Region code',
                        'ForecastLocation': 'Forecast location code',
                        'DataPointKey': 'DataPoint API key'}}
+
+haseink = True
+

@@ -1,10 +1,18 @@
 #!/usr/bin/env python
+# coding=utf-8
 
 from papirus import Papirus
 from PIL import ImageFont, ImageDraw, Image
 import sys
 import os
 import time
+import random
+
+global lfsize
+lfsize = 0
+
+global plugins
+plugins = {}
 
 # Check EPD_SIZE is defined
 EPD_SIZE=0.0
@@ -47,24 +55,43 @@ def getFontSize(my_papirus, printstring):
     return fontsize-1, font.getsize(printstring)
 
 
-def drawWords(papirus, printstring, fontsize, dims):
-
-    #initially set all white background
-    image = Image.new('1', papirus.size, WHITE)
+def drawWords(screen, printstring, text_id, fontsize, icon, icon_id, ifpath, line, last_font_size, spacing):
+    vpos = (line * last_font_size) + 3
 
     # prepare for drawing
-    draw = ImageDraw.Draw(image)
-    font = ImageFont.truetype('/usr/share/fonts/truetype/freefont/FreeMono.ttf', fontsize)
+    screen.AddText(icon, 3, vpos, fontsize, icon_id, font_path=ifpath)
+    screen.AddText(printstring, fontsize + (6 if spacing else 3), vpos, fontsize, text_id)
 
-    draw.text(((papirus.width - dims[0]) / 2, (papirus.height / 2) - (dims[1] / 2)), printstring, font=font, fill=BLACK)
-
-    papirus.display(image)
-    papirus.update()
+    screen.WriteAll()
 
 
-def full_write(string):
+def push(screen, string, text_id=None, icon=u'', icon_id=None, ifpath='web/public/fonts/headlights.ttf', spacing=False, line=0):
+    ident = str(random.randint(1024, 2048))
+    if text_id is None:
+        text_id = 'text_' + ident
+    if icon_id is None:
+        icon_id = 'icon_'+str(random.randint(1024, 2048))
+    global lfsize
     rot = '0'
     papirus = Papirus(rotation=int(rot))
-    fontsize, dims = getFontSize(papirus, string)
-    drawWords(papirus, string, fontsize, dims)
+    if line == 0:
+        fontsize, dims = getFontSize(papirus, 'mm ' + string)
+    else:
+        fontsize = 20
+    drawWords(screen, string, text_id, fontsize, icon, icon_id, ifpath, line, lfsize, spacing)
+    lfsize = fontsize
+    return ident
 
+
+def register(plugin, string, text_id=None, icon=u'', icon_id=None, ifpath='web/public/fonts/headlights.ttf',
+             spacing=True):
+    global plugins
+    plugins[plugin] = {'string': string, 'text_id': text_id, 'icon': icon, 'icon_id': icon_id, 'ifpath': ifpath, 'spacing': spacing}
+
+
+def push_plugins(screen):
+    global plugins
+    i = 1  # start at line 1
+    for name, plugin in plugins.iteritems():
+        push(screen, plugin['string'], plugin['text_id'], plugin['icon'], plugin['icon_id'], plugin['ifpath'], plugin['spacing'], i)
+        i += 1

@@ -1,0 +1,71 @@
+#
+# DO NOT USE THIS FILE - THIS IS FOR TESTING PURPOSES ONLY
+#
+
+[General]
+
+# ---
+
+# Defaults:
+
+# HelloMyNameIs = user (used for personalized output)
+
+# Vendor = 0x04b8 (Seiko Epson)
+
+# Product = 0x0202 (TM-T88IV Receipt Printer M129)
+
+# ---
+
+HelloMyNameIs = user
+
+Vendor = 0x04b8
+
+Product = 0x0202
+
+[Output]
+
+# ---
+
+# Enable or disable optional output formats
+
+# ---
+
+eink = true
+
+[Plugins]
+
+# ---
+
+# Enter the names of the plugins you want to enable in here, separated by commas.
+
+# The source files need to be put in plugins/[pluginname]
+
+# ---
+
+toload = weather
+
+[Schedule]
+
+# ---
+
+# Tells the scheduler when to run Headlights
+
+# for instance, the default is daily at 6am
+
+# TODO: Let the user configure not to have this printed daily
+
+# ---
+
+runat = 06:00
+
+[Debug]
+
+# ---
+
+# Don't touch these unless you really know what you're doing.
+
+# ---
+
+TestMode = 1
+
+LogLevel = DEBUG

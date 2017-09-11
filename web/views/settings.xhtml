@@ -29,9 +29,24 @@
                     <input class="form-control" id="pprod" name="pprod" type="text" value="${pprod}" />
                 </div>
             </div>
-            <div class="form-group">
+			<div class="form-group">
                 <div class="col-lg-10 col-lg-offset-2">
                     <h5><a href="https://python-escpos.readthedocs.io/en/latest/user/usage.html#usb-printer">Confused about how to fill these in? Click here</a></h5>
+                </div>
+            </div>
+			<legend>Output</legend>
+            <div class="form-group checkbox">
+                <div class="col-lg-10">
+					<label>
+						<input id="escpos" name="escpos" type="checkbox" class="disabled" disabled checked /> ESCPoS printer
+					</label>
+					<label>
+						<input id="eink" name="eink" type="checkbox" /> E-ink display (PaPiRus)
+					</label>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-10 col-lg-offset-2">
                     <button class="btn btn-default" type="reset">Cancel</button>
                     <button class="btn btn-primary" type="submit">Submit</button>
                 </div>

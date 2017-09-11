@@ -8,6 +8,11 @@
 HelloMyNameIs = user
 Vendor = 0x04b8
 Product = 0x0202
+[Output]
+# ---
+# Enable or disable optional output formats
+# ---
+eink = true
 [Plugins]
 # ---
 # Enter the names of the plugins you want to enable in here, separated by commas.
@@ -20,7 +25,7 @@ toload = weather
 # for instance, the default is daily at 6am
 # TODO: Let the user configure not to have this printed daily
 # ---
-runat: 06:00
+runat = 06:00
 [Debug]
 # ---
 # Don't touch these unless you really know what you're doing.

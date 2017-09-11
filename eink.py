@@ -2,7 +2,6 @@
 # coding=utf-8
 
 from PIL import ImageFont, ImageDraw, Image
-from main import getCfg
 import sys
 import os
 import time
@@ -13,6 +12,11 @@ lfsize = 0
 
 global plugins
 plugins = {}
+
+try:
+	configfile.read('config/headlights.cfg')
+except PermissionError:
+	handlers.criterr("Permissions error on headlights.cfg. Please ensure you have write permissions for the directory.")
 
 if configfile['Output'].getboolean('eink'):
 	from papirus import Papirus

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # coding=utf-8
 
-from papirus import Papirus
 from PIL import ImageFont, ImageDraw, Image
 from main import getCfg
 import sys
@@ -17,6 +16,7 @@ plugins = {}
 
 getCfg()
 if maincfg['Output'].getboolean('eink'):
+	from papirus import Papirus
 	# Check EPD_SIZE is defined
 	EPD_SIZE=0.0
 	if os.path.exists('/etc/default/epd-fuse'):

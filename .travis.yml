@@ -22,10 +22,6 @@ matrix:
 
     - python: nightly
 
-# goes to the right directory with all the actual files and that
-
-before_install: cd dashday
-
 # command to install dependencies
 
 install:

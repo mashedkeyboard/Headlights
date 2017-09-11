@@ -14,8 +14,7 @@ lfsize = 0
 global plugins
 plugins = {}
 
-getCfg()
-if maincfg['Output'].getboolean('eink'):
+if configfile['Output'].getboolean('eink'):
 	from papirus import Papirus
 	# Check EPD_SIZE is defined
 	EPD_SIZE=0.0

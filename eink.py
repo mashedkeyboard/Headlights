@@ -19,24 +19,24 @@ configfile = ConfigParser()
 getCfg()
 
 if outputcfg.getboolean('eink'):
-	from papirus import Papirus
-	# Check EPD_SIZE is defined
-	EPD_SIZE=0.0
-	if os.path.exists('/etc/default/epd-fuse'):
-		execfile('/etc/default/epd-fuse')
-	if EPD_SIZE == 0.0:
-		print("Please select your screen size by running 'papirus-config'.")
-		sys.exit()
+    from papirus import Papirus
+    # Check EPD_SIZE is defined
+    EPD_SIZE=0.0
+    if os.path.exists('/etc/default/epd-fuse'):
+        execfile('/etc/default/epd-fuse')
+    if EPD_SIZE == 0.0:
+        print("Please select your screen size by running 'papirus-config'.")
+        sys.exit()
 
-	# Running as root only needed for older Raspbians without /dev/gpiomem
-	if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | os.W_OK)):
-		user = os.getuid()
-		if user != 0:
-			print("Please run script as root")
-			sys.exit()
+    # Running as root only needed for older Raspbians without /dev/gpiomem
+    if not (os.path.exists('/dev/gpiomem') and os.access('/dev/gpiomem', os.R_OK | os.W_OK)):
+        user = os.getuid()
+        if user != 0:
+            print("Please run script as root")
+            sys.exit()
 
-	WHITE = 1
-	BLACK = 0
+    WHITE = 1
+    BLACK = 0
 
 
 def getFontSize(my_papirus, printstring):

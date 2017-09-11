@@ -34,16 +34,16 @@ def start():
 
 
 def refresh_eink(configfile):
-	if configfile['Output'].getboolean('eink'):
-		screen = PapirusComposite(False)
-		eink.push(screen, configfile['General']['HelloMyNameIs'])
-		pluginlist = configfile['Plugins']['toload'].split(',')
-		for plugin in pluginlist:
-			pluginloader.init(plugin)
-		pluginloader.updateAllPlugins()
-		eink.push_plugins(screen)
-	else:
-		handlers.debug("Skipping e-ink due to it being disabled in the config file")
+    if configfile['Output'].getboolean('eink'):
+        screen = PapirusComposite(False)
+        eink.push(screen, configfile['General']['HelloMyNameIs'])
+        pluginlist = configfile['Plugins']['toload'].split(',')
+        for plugin in pluginlist:
+            pluginloader.init(plugin)
+        pluginloader.updateAllPlugins()
+        eink.push_plugins(screen)
+    else:
+        handlers.debug("Skipping e-ink due to it being disabled in the config file")
 
 
 def runapp():

@@ -31,7 +31,7 @@ def getCfg():
     maincfg = configfile['General']
     pluginlist = configfile['Plugins']['toload'].split(',')
     debugcfg = configfile['Debug']
-	outputcfg = configfile['Output']
+    outputcfg = configfile['Output']
 
 
 # Main functionality! Woot!

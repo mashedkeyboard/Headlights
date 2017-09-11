@@ -1,0 +1,41 @@
+language: python
+
+cache: pip
+
+matrix:
+
+  include:
+
+    - python: 3.3
+
+    - python: 3.4
+
+    - python: 3.5
+
+    - python: 3.5-dev
+
+    - python: nightly
+
+  allow_failures:
+
+    - python: 3.5-dev
+
+    - python: nightly
+
+# goes to the right directory with all the actual files and that
+
+before_install: cd dashday
+
+# command to install dependencies
+
+install:
+
+    - pip install -r requirements.txt
+
+    - pip install codecov
+
+# command to run tests
+
+script: nosetests runtests.py --with-coverage
+
+after_success: codecov

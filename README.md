@@ -12,7 +12,7 @@ Headlights is a Python application, currently running in Python 2.7 due to the n
 ## What prerequisites are there?
 * A USB ESC/POS compatible thermal or dot matrix printer
 * An [e-ink PaPiRus display](https://www.pi-supply.com/product/PaPiRus-zero-epaper-screen-phat-pi-zero/)
-* [Python](https://www.python.org/downloads/) - Headlights itself is compatible with Python 2.6 upwards and Python 3 (other than 3.4), although Python 2 is required to use e-Ink due to the PaPiRus Python library only being compatible with Python 2.
+* [Python](https://www.python.org/downloads/) - Headlights itself is compatible with Python 2.7 upwards and Python 3 (other than 3.4), although Python 2 is required to use e-Ink due to the PaPiRus Python library only being compatible with Python 2.
 * [Pip, the Python package manager](https://pip.pypa.io/en/stable/installing/)
 * Optionally, a [PaPiRus e-Ink display](https://www.pi-supply.com/product/papirus-epaper-eink-screen-hat-for-raspberry-pi/)
 

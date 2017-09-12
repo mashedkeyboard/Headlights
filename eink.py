@@ -7,6 +7,7 @@ import sys
 import os
 import time
 import random
+import handlers
 
 global lfsize
 lfsize = 0
@@ -23,6 +24,8 @@ except PermissionError:
 
 if configfile['Output'].getboolean('eink', False) == True:
     handlers.debug("eink.py importing papirus")
+    handlers.debug(str(configfile['Output'].getboolean('eink', False)))
+    handlers.debug(str(configfile['Output']))
     from papirus import Papirus
     # Check EPD_SIZE is defined
     EPD_SIZE=0.0

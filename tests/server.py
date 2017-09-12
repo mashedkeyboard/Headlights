@@ -1,7 +1,7 @@
 # Tests the TurboGears2 server
 from tg import expose, TGController, AppConfig
 from wsgiref.simple_server import make_server
-from six.moves import urllib.request
+from six.moves.urllib import request
 import threading
 import time
 
@@ -23,7 +23,7 @@ def testWebServer():
     thr.start()
 
     print("Running test")
-    page = urllib.request.urlopen('http://127.0.0.1:62433/')
+    page = request.urlopen('http://127.0.0.1:62433/')
     if page.read().decode() != "Hello World":
         raise RuntimeError("Server did not correctly host 'Hello World' page.")
     httpd.shutdown()

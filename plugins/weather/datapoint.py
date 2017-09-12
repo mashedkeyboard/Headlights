@@ -1,5 +1,5 @@
 # Give me all the libraries
-from six.moves.urllib import urllib
+from six.moves import urllib
 import json
 import handlers
 

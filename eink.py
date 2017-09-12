@@ -18,6 +18,7 @@ plugins = {}
 # Create a new configuration file instance
 configfile = ConfigParser()
 getCfg()
+outputcfg = configfile['Output']
 
 if outputcfg.getboolean('eink'):
     from papirus import Papirus

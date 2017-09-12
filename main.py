@@ -1,5 +1,5 @@
 # Let's get some libraries
-from six.moves import configparser
+from configparser import ConfigParser
 import datetime
 import logging
 import handlers
@@ -65,7 +65,7 @@ def main():
     logging.info('Headlights process started')
 
     # Create a new configuration file instance
-    configfile = configparser.ConfigParser()
+    configfile = ConfigParser()
 
     # Does the user even have a configuration file?
     if os.path.isfile('config/headlights.cfg') != True:

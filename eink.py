@@ -2,6 +2,7 @@
 # coding=utf-8
 
 from PIL import ImageFont, ImageDraw, Image
+from configparser import ConfigParser
 from main import getCfg
 import sys
 import os

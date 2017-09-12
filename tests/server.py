@@ -1,7 +1,7 @@
 # Tests the TurboGears2 server
 from tg import expose, TGController, AppConfig
 from wsgiref.simple_server import make_server
-import urllib.request
+from six.moves import urllib.request
 import threading
 import time
 

@@ -3,7 +3,6 @@
 
 from PIL import ImageFont, ImageDraw, Image
 from configparser import ConfigParser
-from main import getCfg
 import sys
 import os
 import time
@@ -17,10 +16,12 @@ plugins = {}
 
 # Create a new configuration file instance
 configfile = ConfigParser()
-getCfg()
-outputcfg = configfile['Output']
+try:
+    configfile.read('config/headlights.cfg')
+except PermissionError:
+    handlers.criterr("Permissions error on headlights.cfg. Please ensure you have write permissions for the directory.")
 
-if outputcfg.getboolean('eink'):
+if configfile['Output'].getboolean('eink'):
     from papirus import Papirus
     # Check EPD_SIZE is defined
     EPD_SIZE=0.0

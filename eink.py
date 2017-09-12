@@ -21,7 +21,7 @@ try:
 except PermissionError:
     handlers.criterr("Permissions error on headlights.cfg. Please ensure you have write permissions for the directory.")
 
-if configfile['Output'].getboolean('eink'):
+if configfile['Output'].getboolean('eink', False):
     from papirus import Papirus
     # Check EPD_SIZE is defined
     EPD_SIZE=0.0
@@ -94,6 +94,7 @@ def push(screen, string, text_id=None, icon=u'', icon_id=None, ifpath='web/pu
 
 def register(plugin, string, text_id=None, icon=u'', icon_id=None, ifpath='web/public/fonts/headlights.ttf',
              spacing=True):
+    handlers.debug("eInk registering plugin " + plugin)
     global plugins
     plugins[plugin] = {'string': string, 'text_id': text_id, 'icon': icon, 'icon_id': icon_id, 'ifpath': ifpath, 'spacing': spacing}
 

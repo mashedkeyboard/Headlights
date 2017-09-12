@@ -9,7 +9,6 @@ import os
 import threading
 import eink
 import pluginloader
-from papirus import PapirusComposite
 
 global headlightsjob
 global configfile
@@ -34,7 +33,8 @@ def start():
 
 
 def refresh_eink(configfile):
-    if configfile['Output'].getboolean('eink'):
+    if configfile['Output'].getboolean('eink', False):
+        from papirus import PapirusComposite
         screen = PapirusComposite(False)
         eink.push(screen, configfile['General']['HelloMyNameIs'])
         pluginlist = configfile['Plugins']['toload'].split(',')
@@ -86,6 +86,7 @@ if __name__ == "__main__":
             configfile.read('config/headlights.cfg')
         except Exception as e:
             handlers.criterr("Permissions error on headlights.cfg. Please ensure you have write permissions for the directory.")
+        
         web.serv.init()
         # Run the web server
         thr = threading.Thread(target=web.serv.run)

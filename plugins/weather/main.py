@@ -52,6 +52,7 @@ def init():
 
 
 def update(local_forecast=None):
+    handlers.debug("Weather registering with E-ink controller")
     if local_forecast is None:
         local_forecast = datapoint.fetchLocalFrc(weathercfg['ForecastLocation'], weathercfg['DataPointKey'])
     weather_now = wtypes[local_forecast['W']]

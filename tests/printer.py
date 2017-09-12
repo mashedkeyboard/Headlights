@@ -1,6 +1,7 @@
 # Tests the escpos functionality
 
 from escpos import printer
+import escpos
 import os
 
 def testSetFont():

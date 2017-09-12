@@ -30,7 +30,7 @@ Product = 0x0202
 
 # ---
 
-eink = true
+eink = false
 
 [Plugins]
 

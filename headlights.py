@@ -33,7 +33,7 @@ def start():
 
 
 def refresh_eink(configfile):
-    if configfile['Output'].getboolean('eink', False) == True:
+    if configfile['Output'].getboolean('eink', False):
         handlers.debug("headlights.py importing papirus")
         from papirus import PapirusComposite
         screen = PapirusComposite(False)

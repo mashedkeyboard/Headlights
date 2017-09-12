@@ -12,7 +12,7 @@ Product = 0x0202
 # ---
 # Enable or disable optional output formats
 # ---
-eink = true
+eink = false
 [Plugins]
 # ---
 # Enter the names of the plugins you want to enable in here, separated by commas.

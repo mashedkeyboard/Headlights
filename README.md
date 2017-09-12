@@ -20,7 +20,7 @@ Headlights is a Python application, currently running in Python 2.7 due to the n
 1. `git clone https://github.com/mashedkeyboard/Headlights.git`
 2. `cd Headlights`
 3. `pip install -r requirements.txt`
-4. Run headlights.py and browse to localhost:9375.
+4. Run headlights.py and browse to `ip_address`:9375.
 5. Complete the setup with your own values. To find your printer's vendor and product IDs, [use the python-escpos documentation](https://python-escpos.readthedocs.io/en/latest/user/usage.html#usb-printer). Note that at this time Headlights only supports USB printers.
 
 NOTE: This setup is not 100% complete at the moment. If something breaks, manually copy headlights.cfg.sample in the config directory, and edit from there.

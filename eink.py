@@ -24,8 +24,6 @@ except PermissionError:
 
 if configfile['Output'].getboolean('eink', False):
     handlers.debug("eink.py importing papirus")
-    handlers.debug(str(configfile['Output'].getboolean('eink', False)))
-    handlers.debug(str(configfile['Output']))
     from papirus import Papirus
     # Check EPD_SIZE is defined
     EPD_SIZE=0.0

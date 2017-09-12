@@ -22,6 +22,7 @@ except PermissionError:
     handlers.criterr("Permissions error on headlights.cfg. Please ensure you have write permissions for the directory.")
 
 if configfile['Output'].getboolean('eink', False):
+	handlers.debug("eink.py importing papirus")
     from papirus import Papirus
     # Check EPD_SIZE is defined
     EPD_SIZE=0.0

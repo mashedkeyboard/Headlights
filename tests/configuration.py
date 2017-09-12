@@ -1,6 +1,6 @@
 # Tests that the configparser works and that the included configuration files are all working fine
 
-from six.moves import configparser
+import configparser
 
 def weatherConfTest():
     configfile = configparser.ConfigParser()

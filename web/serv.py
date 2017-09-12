@@ -1,5 +1,5 @@
 from tg import expose, TGController, AppConfig, redirect, request, abort
-from six.moves import configparser
+from configparser import ConfigParser
 import unicodedata
 import handlers
 import webhelpers2
@@ -22,7 +22,7 @@ def getSubdirectories(dir):
 
 
 class SetupController(TGController):
-    mainconfig = configparser.ConfigParser()
+    mainconfig = ConfigParser()
 
     @expose('web/views/setup/index.xhtml')
     def index(self):
@@ -95,7 +95,7 @@ class SetupController(TGController):
 
 
 class PluginController(TGController):
-    mainconfig = configparser.ConfigParser()
+    mainconfig = ConfigParser()
 
     @expose('web/views/plugins.xhtml')
     def index(self, enable='', disable='', delete=''):
@@ -120,7 +120,7 @@ class PluginController(TGController):
                     'version': pinfo.version,
                     'author': pinfo.author}
 
-        mainconfig = configparser.ConfigParser()
+        mainconfig = ConfigParser()
         try:
             mainconfig.read('config/headlights.cfg')
         except PermissionError:
@@ -140,7 +140,7 @@ class PluginController(TGController):
     def settings(self, pname, updated=None):
         pinfo = __import__('plugins.' + pname, fromlist=[pname])
         if pinfo.hasconfig == True:
-            plugincfg = configparser.ConfigParser()
+            plugincfg = ConfigParser()
             try:
                 plugincfg.read(pinfo.configfile)
             except PermissionError:
@@ -160,7 +160,7 @@ class PluginController(TGController):
 
     @expose()
     def enablePlugin(self, pid):
-        mainconfig = configparser.ConfigParser()
+        mainconfig = ConfigParser()
         try:
             mainconfig.read('config/headlights.cfg')
         except PermissionError:
@@ -185,7 +185,7 @@ class PluginController(TGController):
 
     @expose()
     def disablePlugin(self, pid):
-        mainconfig = configparser.ConfigParser()
+        mainconfig = ConfigParser()
         try:
             mainconfig.read('config/headlights.cfg')
         except PermissionError:
@@ -204,7 +204,7 @@ class PluginController(TGController):
         pname = unicodedata.normalize('NFKD', pname).encode('ascii', 'ignore')
         pinfo = __import__('plugins.' + pname, fromlist=[pname])
         if pinfo.hasconfig == True:
-            plugincfg = configparser.ConfigParser()
+            plugincfg = ConfigParser()
             try:
                 plugincfg.read(pinfo.configfile)
             except PermissionError:
@@ -230,7 +230,7 @@ class RootController(TGController):
 
     @expose('web/views/settings.xhtml')
     def settings(self):
-        mainconfig = configparser.ConfigParser()
+        mainconfig = ConfigParser()
         try:
             mainconfig.read('config/headlights.cfg')
         except PermissionError:
@@ -248,7 +248,7 @@ class RootController(TGController):
 
     @expose()
     def changeTime(self, scheduleRun):
-        mainconfig = configparser.ConfigParser()
+        mainconfig = ConfigParser()
         try:
             mainconfig.read('config/headlights.cfg')
         except PermissionError:
@@ -262,7 +262,7 @@ class RootController(TGController):
 
     @expose()
     def changeGeneral(self, name, pvend, pprod, escpos=True, eink=False):
-        mainconfig = configparser.ConfigParser()
+        mainconfig = ConfigParser()
         try:
             mainconfig.read('config/headlights.cfg')
         except PermissionError:
@@ -292,7 +292,7 @@ def init(isfirst=False):
     global firstrun
     firstrun = isfirst
     if os.path.isfile('config/web.cfg') == True:
-        userconfig = configparser.ConfigParser()
+        userconfig = ConfigParser()
         try:
             userconfig.read('config/web.cfg')
         except PermissionError:
@@ -344,7 +344,7 @@ def run_api():
 class APIRootController(TGController):
     @expose()
     def tweet_print(self, authkey):
-        configfile = configparser.ConfigParser()
+        configfile = ConfigParser()
         try:
             configfile.read('config/headlights.cfg')
         except PermissionError:

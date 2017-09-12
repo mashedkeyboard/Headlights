@@ -1,5 +1,6 @@
 appdirs==1.4.0
 argcomplete==1.4.1
+configparser==3.5.0
 crank==0.8.0
 feedparser==5.2.1
 Kajiki==0.5.5

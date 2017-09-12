@@ -6,7 +6,7 @@
 
 import os
 import handlers
-from configparser import ConfigParser
+from six.moves import configparser
 import pluginloader
 import eink
 from plugins.weather import datapoint
@@ -18,7 +18,7 @@ def init():
     global weathercfg
 
     # Load configuration and all that jazz
-    config = ConfigParser()
+    config = configparser.ConfigParser()
     if os.path.isfile('config/weather.cfg'):
         config.read('config/weather.cfg')
         weathercfg = config['Info']

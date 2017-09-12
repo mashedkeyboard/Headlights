@@ -1,5 +1,5 @@
 # Give me all the libraries
-from six.moves.urllib import request, error
+from six.moves.urllib import urllib
 import json
 import handlers
 
@@ -7,12 +7,12 @@ import handlers
 # Fetch the text-based regional forecast from DataPoint
 def fetchRegionFrcAsText(regioncode, key):
     url = 'http://datapoint.metoffice.gov.uk/public/data/txt/wxfcs/regionalforecast/json/' + regioncode + '?key=' + key
-    request = Request(url)
+    request = urllib.request.Request(url)
     request.add_header('User-Agent', 'Headlights Client')
     request.add_header('Content-Type', 'application/json')
     try:
-        response = urlopen(request).read().decode('UTF-8')  # Tries to read, will throw exception on 403 etc
-    except HTTPError as e:
+        response = urllib.request.urlopen(request).read().decode('UTF-8')  # Tries to read, will throw exception on 403 etc
+    except urllib.error.HTTPError as e:
         if e.code == 403:
             handlers.criterr(
                 'HTTP error 403 (access denied). Check your API key and try again.')  # This is probably them forgetting to put their key in (correctly)
@@ -35,12 +35,12 @@ def fetchRegionFrcAsText(regioncode, key):
 # Fetch the actual more local forecast general daily data from DataPoint
 def fetchLocalFrc(stationcode, key):
     url = 'http://datapoint.metoffice.gov.uk/public/data/val/wxfcs/all/json/' + stationcode + '?res=daily&key=' + key
-    request = Request(url)
+    request = urllib.request.Request(url)
     request.add_header('User-Agent', 'Headlights Client')
     request.add_header('Content-Type', 'application/json')
     try:
-        response = urlopen(request).read().decode('UTF-8')
-    except HTTPError as e:
+        response = urllib.request.urlopen(request).read().decode('UTF-8')
+    except urllib.error.HTTPError as e:
         if e.code == 403:
             handlers.criterr('HTTP error 403 (access denied). Check your API key and try again.')
         else:

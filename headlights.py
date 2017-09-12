@@ -1,5 +1,5 @@
 # Scheduling and web server and all sorts of fancy things!
-from configparser import ConfigParser
+from six.moves import configparser
 import web.serv
 import schedule
 import time
@@ -19,7 +19,7 @@ def start():
     global headlightsjob
     global configfile
     if os.path.isfile('config/headlights.cfg'):
-        configfile = ConfigParser()
+        configfile = configparser.ConfigParser()
         try:
             configfile.read('config/headlights.cfg')
         except Exception as e:
@@ -64,7 +64,7 @@ def reload():
     global headlightsjob
     global configfile
     if os.path.isfile('config/headlights.cfg'):
-        configfile = ConfigParser()
+        configfile = configparser.ConfigParser()
         try:
             configfile.read('config/headlights.cfg')
         except Exception as e:
@@ -83,7 +83,7 @@ if __name__ == "__main__":
     # Load the configuration file
     # noinspection PyPackageRequirements
     if os.path.isfile('config/headlights.cfg'):
-        configfile = ConfigParser()
+        configfile = configparser.ConfigParser()
         try:
             configfile.read('config/headlights.cfg')
         except Exception as e:

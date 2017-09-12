@@ -2,7 +2,7 @@
 # coding=utf-8
 
 from PIL import ImageFont, ImageDraw, Image
-from configparser import ConfigParser
+from six.moves import configparser
 import sys
 import os
 import time
@@ -16,7 +16,7 @@ global plugins
 plugins = {}
 
 # Create a new configuration file instance
-configfile = ConfigParser()
+configfile = configparser.ConfigParser()
 try:
     configfile.read('config/headlights.cfg')
 except PermissionError:

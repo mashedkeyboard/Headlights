@@ -40,11 +40,13 @@ class SetupController(TGController):
 
     @expose()
     def doStep1(self, name, pvend, pprod, escpos=True, eink=False):
+        if eink:
+            eink = True
         SetupController.mainconfig["General"] = {}
         SetupController.mainconfig["General"]["HelloMyNameIs"] = name
         SetupController.mainconfig["General"]["vendor"] = pvend
         SetupController.mainconfig["General"]["product"] = pprod
-		SetupController.mainconfig["Output"]["eink"] = (eink ? True : False)
+        SetupController.mainconfig["Output"]["eink"] = eink
         with open('config/headlights.cfg.tmp', 'w') as headlightscfg:
             SetupController.mainconfig.write(headlightscfg)
         redirect('/setup/step2')
@@ -262,6 +264,8 @@ class RootController(TGController):
 
     @expose()
     def changeGeneral(self, name, pvend, pprod, escpos=True, eink=False):
+        if eink:
+            eink = True
         mainconfig = ConfigParser()
         try:
             mainconfig.read('config/headlights.cfg')
@@ -271,7 +275,7 @@ class RootController(TGController):
         mainconfig["General"]["HelloMyNameIs"] = name
         mainconfig["General"]["vendor"] = pvend
         mainconfig["General"]["product"] = pprod
-		mainconfig["Output"]["eink"] = (eink ? True : False)
+        mainconfig["Output"]["eink"] = eink
         with open('config/headlights.cfg', 'w') as headlightscfg:
             mainconfig.write(headlightscfg)
         headlights.reload()
